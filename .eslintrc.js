@@ -15,5 +15,11 @@ module.exports = {
   plugins: [
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'vue/multi-word-component-names': ['error', {
+      'ignores': ['default']
+    }],
+    'no-undef': 'off',
+    'space-before-function-paren': ['error', 'never'],
+  }
 }

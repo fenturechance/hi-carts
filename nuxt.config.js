@@ -1,3 +1,4 @@
+import webpack from 'webpack'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -18,10 +19,12 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/i18n.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -32,13 +35,15 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxt/postcss8',
+    '@nuxtjs/svg'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'cookie-universal-nuxt'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -49,5 +54,26 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    plugins: [
+      new webpack.ProvidePlugin({
+        _M: '~/constants.js'
+      })
+    ],
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {}
+      }
+    },
+    extractCSS: true // process.env.DEPLOY_ENV === 'production'
+  },
+  svg: {
+    vueSvgLoader: {
+    },
+    svgSpriteLoader: {
+    }
+  },
+  router: {
+    middleware: 'i18n'
   }
 }
