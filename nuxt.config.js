@@ -65,7 +65,7 @@ export default {
         autoprefixer: {}
       }
     },
-    extractCSS: true // process.env.DEPLOY_ENV === 'production'
+    extractCSS: process.env.DEPLOY_ENV === 'production'
   },
   svg: {
     vueSvgLoader: {

@@ -1,5 +1,18 @@
 {
   "home": {
     "title": "最專業的線上程式語言課程 | 工程師首選教學平台 | HiSKIO 嗨 程式技能"
+  },
+  "login": {
+    "login": "登入",
+    "register": "註冊",
+    "loginWidth": "使用{platform}登入",
+    "pleaseType": "請輸入{field}",
+    "password": "登入密碼",
+    "forgetPassword": "忘記密碼",
+    "hiSkioId": "HiSKIO ID",
+    "announcement": "登入註冊即代表您同意",
+    "and": "及",
+    "user": "使用者",
+    "privacyPolicy": "隱私權政策"
   }
 }

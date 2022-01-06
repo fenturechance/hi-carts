@@ -1,118 +1,71 @@
 <template>
   <div class="bg-black/80 w-screen h-screen fixed top-0 left-0" :class="[ isOpenModal ? 'is-active' : '', 'modal' ]">
-    <div class="max-w-md bg-white h-screen rounded-lg m-auto relative">
-      <CloseBtn class="w-[20px] h-[20px] text-gray-500 absolute right-3 top-6" />
-      <header class="modal-card-head">
-        <p class="modal-card-title">
-          <span>{{ modalTitle }}</span>
+    <div class="max-w-md bg-white h-screen rounded-lg m-auto relative pt-14 px-16 overflow-y-scroll" :style="bgStyle">
+      <CloseBtn class="w-[20px] h-[20px] text-gray-500 absolute right-5 top-6" @click="closeModal" />
+      <ul class="flex px-4 mb-8">
+        <li v-for="tab in tabList" :key="tab.key" class="tabStyle" :class="{ active: nowTab === tab.key }" @click="changeTab(tab.key)">
+          <span class="pb-2">{{ tab.text }}</span>
+        </li>
+      </ul>
+      <ul>
+        <li v-for="loginMethod in thridPartyLoginList" :key="loginMethod.key" class="thirdPartyLogin">
+          <div class="sm:pl-[20%] flex items-center justify-start">
+            <img :src="loginMethod.img" class="mr-3">
+            <span class="text-gray-450 font-light">{{ loginMethod.text }}</span>
+          </div>
+        </li>
+      </ul>
+      <div class="mt-8">
+        <p class="text-center text-gray-500 tracking-wide font-light mb-5">
+          {{ $t('login.loginWidth', { platform: ` ${$t('login.hiSkioId')} ` }) }}
         </p>
-        <button class="delete" aria-label="close" @click="closeModal" />
-      </header>
-      <a href="/auth/" class="button_a">
-        <button class="button is-fullwidth google">
-          <span class="reg_login icon is-small">
-            <i class="fab fa-google" />
-          </span>
-          <span>使用 google 帳號 {{ modalTitle }}</span>
-        </button>
-      </a>
-      <hr class="login-or">
-      <form method="post" @submit="checkForm">
-        <section class="modal-card-body">
-          <!--登入表單-->
-          <div v-if="modalTyple === 'login'">
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="email" :class="[emailWithError ? 'input is-danger' : 'input']" type="email" placeholder="Your email" name="emailName">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-envelope" />
-                </span>
-              </p>
-              <p v-if="emailWithError" class="help is-danger">
-                請輸入email
-              </p>
-            </div>
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="password" :class="[passwordWithError ? 'input is-danger' : 'input']" type="password" placeholder="Your password" name="passwordName">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-lock" />
-                </span>
-              </p>
-              <p v-if="passwordWithError" class="help is-danger">
-                請輸入密碼
-              </p>
-            </div>
+        <form>
+          <div class="formItemStyle">
+            <input type="text" class="inputStyle" :placeholder="$t('login.pleaseType', { field: $t('login.hiSkioId') })">
+            <UsernameSvg class="inputSvg" />
           </div>
-
-          <!--註冊表單-->
-          <div v-if="modalTyple === 'registered'">
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="name" :class="[nameWithError ? 'input is-danger' : 'input']" type="text" placeholder="Name*">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-user" />
-                </span>
-              </p>
-              <p v-if="nameWithError" class="help is-danger">
-                請填寫姓名
-              </p>
-            </div>
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="email" :class="[emailWithError ? 'input is-danger' : 'input']" type="email" placeholder="Email*" name="emailName">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-envelope" />
-                </span>
-              </p>
-              <p v-if="emailWithError" class="help is-danger">
-                請輸入email
-              </p>
-            </div>
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="password" :class="[passwordWithError ? 'input is-danger' : 'input']" type="password" placeholder="Password*">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-lock" />
-                </span>
-              </p>
-              <p v-if="passwordWithError" class="help is-danger">
-                請填寫密碼
-              </p>
-            </div>
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="repeatPassword" :class="[repeatPasswordWithError ? 'input is-danger' : 'input']" type="password" placeholder="Repeat Password*">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-lock" />
-                </span>
-              </p>
-              <p v-if="repeatPasswordWithError" class="help is-danger">
-                密碼必須相等
-              </p>
-            </div>
+          <div class="formItemStyle">
+            <input type="password" class="inputStyle" :placeholder="$t('login.pleaseType', { field: $t('login.password') })">
+            <PasswordSvg class="inputSvg" />
           </div>
-          <div class="reg_login_button">
-            <button type="submit" class="button is-fullwidth">
-              {{ modalTitle }}
-            </button>
+          <div class="flex mt-4">
+            <CheckBoxInput id="announcement" :checked.sync="announceBool" />
+            <p class="text-gray-400 text-sm ml-2">
+              <span>{{ $t('login.announcement') }}</span>
+              <span class="underline">{{ $t('login.user') }}</span>
+              <span>{{ $t('login.and') }}</span>
+              <span class="underline">{{ $t('login.privacyPolicy') }}</span>
+            </p>
           </div>
-          <hr>
-          <div class="bottom_center">
-            還沒有帳戶嗎? <a href="#">立即註冊</a> 或是 <a href="#">忘記密碼</a>
-          </div>
-        </section>
-      </form>
+          <button class="mt-5 w-full bg-cyan-600 text-white rounded-lg py-2 cursor-pointer">
+            {{ $t('login.login') }}
+          </button>
+          <p class="text-gray-450 font-light text-center mt-4 mb-4">
+            {{ $t('login.forgetPassword') }}
+          </p>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import CloseBtn from '~/assets/svg/CloseBtn.vue'
+import UsernameSvg from '~/assets/svg/UsernameSvg.vue'
+import PasswordSvg from '~/assets/svg/PasswordSvg.vue'
+import loginBg from '~/assets/img/login-bg.png'
+import iconFacebook from '~/assets/img/icon-facebook.svg'
+import iconGoogle from '~/assets/img/icon-google.svg'
+import iconGithub from '~/assets/img/icon-github.svg'
+import iconLinkedin from '~/assets/img/icon-linkedin.svg'
+import CheckBoxInput from '~/components/Element/CheckBoxInput.vue'
 export default {
   name: 'LoginModal',
   components: {
-    CloseBtn
+    CloseBtn,
+    UsernameSvg,
+    PasswordSvg,
+    CheckBoxInput
   },
   props: {
     modalTyple: {
@@ -134,7 +87,12 @@ export default {
       emailWithError: null,
       passwordWithError: null,
       nameWithError: null,
-      repeatPasswordWithError: null
+      repeatPasswordWithError: null,
+      nowTab: 'login',
+      bgStyle: {
+        backgroundImage: `url('${loginBg}')`
+      },
+      announceBool: true
     }
   },
   computed: {
@@ -146,6 +104,20 @@ export default {
         return '註冊'
       }
       return ''
+    },
+    tabList() {
+      return [
+        { text: this.$t('login.login'), key: 'login' },
+        { text: this.$t('login.register'), key: 'register' }
+      ]
+    },
+    thridPartyLoginList() {
+      return [
+        { text: this.$t('login.loginWidth', { platform: 'Facebook' }), key: 'facebook', img: iconFacebook },
+        { text: this.$t('login.loginWidth', { platform: 'Google' }), key: 'google', img: iconGoogle },
+        { text: this.$t('login.loginWidth', { platform: 'Github' }), key: 'github', img: iconGithub },
+        { text: this.$t('login.loginWidth', { platform: 'Linkedin' }), key: 'linkedin', img: iconLinkedin }
+      ]
     }
   },
   methods: {
@@ -178,7 +150,30 @@ export default {
     closeModal() {
       this.$emit('update:openModal', false)
       // this.isOpenModal = false
+    },
+    changeTab(tab) {
+      this.nowTab = tab
     }
   }
 }
 </script>
+<style scoped>
+.tabStyle {
+  @apply w-1/2 text-[32px] font-medium text-center text-gray-300 cursor-pointer tracking-wider;
+}
+.tabStyle.active span{
+  @apply border-b-4 border-cyan-600 text-cyan-600;
+}
+.thirdPartyLogin {
+  @apply border py-3 px-4 border-gray-400 rounded-md flex mb-3 items-center;
+}
+.inputSvg {
+  @apply w-[16px] h-[20px] text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2;
+}
+.inputStyle {
+  @apply bg-gray-100 w-full pl-12 py-3 rounded-sm focus:outline-none placeholder:font-light text-sm;
+}
+.formItemStyle {
+  @apply relative mb-2;
+}
+</style>
