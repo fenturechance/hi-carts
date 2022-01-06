@@ -25,7 +25,7 @@ export const mutations = {
   },
   setUserLoggedIn: (state, payload) => {
     state.isUserLoggedIn = true
-    state.userPicture = payload.userPicture || 'https://bulma.io/images/placeholders/128x128.png'
+    state.userPicture = payload.userPicture
     state.userName = payload.userName
     state.userUid = payload.userUid
     if (process.client) {
@@ -61,25 +61,6 @@ export const mutations = {
 
 export const actions = {
   nuxtServerInit({ commit, dispatch }, context) {
-    if (context.query.id_token && context.query.refresh_token) {
-      const idTokenDecode = jwtDecode(context.query.id_token)
-      commit('setUserLoggedIn', {
-        id_token: context.query.id_token,
-        refresh_token: context.query.refresh_token,
-        userUid: idTokenDecode.user_id,
-        userPicture: idTokenDecode.picture,
-        userName: idTokenDecode.name
-      })
-      dispatch('saveMemberInfo')
-      context.app.$cookies.set('id_token', context.query.id_token)
-      context.app.$cookies.set('refresh_token', context.query.refresh_token)
-      context.app.$cookies.set('userUid', idTokenDecode.user_id)
-      context.app.$cookies.set('userPicture', idTokenDecode.picture)
-      context.app.$cookies.set('userName', idTokenDecode.name)
-
-      return
-    }
-
     if (context.app.$cookies.get('id_token')) {
       const picture = context.app.$cookies.get('userPicture')
       const name = context.app.$cookies.get('userName')

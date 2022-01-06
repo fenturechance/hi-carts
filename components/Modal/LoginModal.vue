@@ -1,7 +1,7 @@
 <template>
   <div class="bg-black/80 w-screen h-screen fixed top-0 left-0" :class="[ isOpenModal ? 'is-active' : '', 'modal' ]">
     <div class="max-w-md bg-white h-screen rounded-lg m-auto relative pt-14 px-16 overflow-y-scroll" :style="bgStyle">
-      <CloseBtn class="w-[20px] h-[20px] text-gray-500 absolute right-5 top-6" @click="closeModal" />
+      <CloseBtn class="w-[20px] h-[20px] text-gray-500 absolute right-5 top-6 cursor-pointer" @click="closeModal" />
       <ul class="flex px-4 mb-8">
         <li v-for="tab in tabList" :key="tab.key" class="tabStyle" :class="{ active: nowTab === tab.key }" @click="changeTab(tab.key)">
           <span class="pb-2">{{ tab.text }}</span>
@@ -21,11 +21,16 @@
         </p>
         <form>
           <div class="formItemStyle">
-            <input type="text" class="inputStyle" :placeholder="$t('login.pleaseType', { field: $t('login.hiSkioId') })">
-            <UsernameSvg class="inputSvg" />
+            <div class="relative">
+              <input v-model="editForm.account" type="text" class="inputStyle" :class="{ error: errorResponse.bool }" :placeholder="$t('login.pleaseType', { field: $t('login.hiSkioId') })">
+              <UsernameSvg class="inputSvg" />
+            </div>
+            <p v-if="errorResponse.bool" class="text-red-500 text-sm">
+              {{ errorResponse.text }}
+            </p>
           </div>
           <div class="formItemStyle">
-            <input type="password" class="inputStyle" :placeholder="$t('login.pleaseType', { field: $t('login.password') })">
+            <input v-model="editForm.password" type="password" class="inputStyle" :placeholder="$t('login.pleaseType', { field: $t('login.password') })">
             <PasswordSvg class="inputSvg" />
           </div>
           <div class="flex mt-4">
@@ -37,7 +42,7 @@
               <span class="underline">{{ $t('login.privacyPolicy') }}</span>
             </p>
           </div>
-          <button class="mt-5 w-full bg-cyan-600 text-white rounded-lg py-2 cursor-pointer">
+          <button class="mt-5 w-full bg-cyan-600 text-white rounded-lg py-2 cursor-pointer" @click="checkForm">
             {{ $t('login.login') }}
           </button>
           <p class="text-gray-450 font-light text-center mt-4 mb-4">
@@ -75,14 +80,20 @@ export default {
     openModal: {
       type: Boolean,
       default: false
+    },
+    errorResponse: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
       isOpenModal: this.openModal,
-      name: '',
+      editForm: {
+        account: '',
+        password: ''
+      },
       email: '',
-      password: '',
       repeatPassword: '',
       emailWithError: null,
       passwordWithError: null,
@@ -127,24 +138,11 @@ export default {
       this.passwordWithError = false
       this.nameWithError = false
       this.repeatPasswordWithError = false
-      // 驗證 email、密碼
-      // if (this.modalTyple === 'login') {
-      //   if (!this.email) { return this.emailWithError = true }
-      //   if (!this.password) { return this.passwordWithError = true }
-      // }
-      // if (this.modalTyple === 'registered') {
-      //   if (!this.name) { return this.nameWithError = true }
-      //   if (!this.email) { return this.emailWithError = true }
-      //   if (!this.password) { return this.passwordWithError = true }
-      //   if (this.repeatPassword !== this.password) {
-      //     return this.repeatPasswordWithError = true
-      //   }
-      // }
       this.$emit('loginModalSubmit', {
         modalTyple: this.modalTyple,
-        name: this.name,
-        email: this.email,
-        password: this.password
+        account: this.editForm.account,
+        password: this.editForm.password,
+        confirm: true
       })
     },
     closeModal() {
@@ -165,13 +163,16 @@ export default {
   @apply border-b-4 border-cyan-600 text-cyan-600;
 }
 .thirdPartyLogin {
-  @apply border py-3 px-4 border-gray-400 rounded-md flex mb-3 items-center;
+  @apply border py-3 px-4 border-gray-400 rounded-md flex mb-3 items-center cursor-pointer;
 }
 .inputSvg {
   @apply w-[16px] h-[20px] text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2;
 }
 .inputStyle {
   @apply bg-gray-100 w-full pl-12 py-3 rounded-sm focus:outline-none placeholder:font-light text-sm;
+}
+.inputStyle.error {
+  @apply border-red-500 border;
 }
 .formItemStyle {
   @apply relative mb-2;

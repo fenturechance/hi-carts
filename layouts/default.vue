@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Header
-      :title="$t('home.title')"
+    <HeaderArea
       @loginClick="loginClick"
       @registeredClick="registeredClick"
     />
@@ -10,26 +9,32 @@
       v-if="openModal"
       :modal-typle="modalTyple"
       :open-modal.sync="openModal"
+      :error-response="errorResponse"
       @loginModalSubmit="loginModalSubmit"
     />
-    <Footer />
   </div>
 </template>
 <script>
-import Header from '~/components/Header/Header.vue'
-import Footer from '~/components/Footer/Footer.vue'
+import HeaderArea from '~/components/Header/HeaderArea.vue'
 import LoginModal from '~/components/Modal/LoginModal.vue'
-import API from '~/api.js'
+import { API, baseURL } from '~/api.js'
+import { toUpperFirst } from '~/assets/js/utils.js'
 export default {
   components: {
-    Header,
-    Footer,
+    HeaderArea,
     LoginModal
   },
   data() {
+    const emptyErrorResponse = {
+      bool: false,
+      text: ''
+    }
     return {
-      openModal: true,
-      modalTyple: ''
+      openModal: false,
+      modalTyple: '',
+      errorResponse: {
+        ...emptyErrorResponse
+      }
     }
   },
   mounted() {
@@ -46,64 +51,59 @@ export default {
       this.openModal = !this.openModal
       this.modalTyple = 'registered'
     },
-    loginModalSubmit(data) {
-      if (data.modalTyple === 'login') {
-        this.$axios({
-          method: API.member.login.method,
-          url: API.member.login.url,
-          baseURL: process.env.google_api_url,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: {
-            ...data,
-            returnSecureToken: true
-          }
-        }).then((response) => {
-          console.log(response.data)
-
-          this.$store.commit('setUserLoggedIn', {
-            id_token: response.data.idToken,
-            refresh_token: response.data.refreshToken,
-            userUid: response.data.localId,
-            userName: response.data.email
-          })
-
-          this.$store.dispatch('getUserFavorite')
-
-          this.openModal = false
-        }).catch((error) => {
-          const code = parseInt(error.response && error.response.status) // 取得status code
-          console.log(code)
-          console.log(error.response.data) // 取得資料
-          console.log('TO DO error !')
-        })
-      }
-      if (data.modalTyple === 'registered') {
-        this.$axios({
-          method: API.member.registered.method,
-          url: API.member.registered.url,
-          baseURL: process.env.google_api_url,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: {
-            ...data,
-            returnSecureToken: true
-          }
-        }).then((response) => {
-          console.log(response.data)
-          // 註冊寫入會員資料
-          this.$store.dispatch('saveMemberInfo', {
-            email: data.email,
-            name: data.name,
-            userUid: response.data.localId
-          })
-          this.openModal = false
-        }).catch((error) => {
-          console.log(error)
-        })
-      }
+    async loginModalSubmit(data) {
+      const response = await this.loginFun(data)
+      const response2 = await this.fetchUserProfile(response)
+      this.errorResponse = { ...this.emptyErrorResponse }
+      this.openModal = false
+      this.$store.commit('setUserLoggedIn', {
+        id_token: response.data.access_token,
+        refresh_token: response.data.access_token,
+        userUid: response2.data.username,
+        userName: response2.data.username,
+        userPicture: response2.data.avatar
+      })
+      this.$store.dispatch('getUserFavorite')
+    },
+    loginFun(data) {
+      return this.$axios({
+        method: API.member.login.method,
+        url: API.member.login.url,
+        baseURL,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          account: data.account,
+          password: data.password,
+          confirm: data.confirm
+        }
+      }).then((response) => {
+        return response
+      }).catch((error) => {
+        if (!error.response) { return }
+        if (!error.response.data) { return }
+        this.errorResponse.text = error.response.data.message.account[0]
+        this.errorResponse.bool = true
+      })
+    },
+    fetchUserProfile(response) {
+      return this.$axios({
+        method: API.member.me.method,
+        url: API.member.me.url,
+        baseURL,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${toUpperFirst(response.data.token_type)} ${response.data.access_token}`
+        }
+      }).then((response) => {
+        return response
+      }).catch((error) => {
+        if (!error.response) { return }
+        if (!error.response.data) { return }
+        this.errorResponse.text = error.response.data.message.account[0]
+        this.errorResponse.bool = true
+      })
     }
   }
 }
