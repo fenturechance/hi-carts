@@ -12,6 +12,7 @@ module.exports = {
     colors: ({ colors }) => ({
       ...colors,
       gray: {
+        50: '#f0f0f0',
         100: '#fafafa',
         300: '#d9d9d9',
         400: '#bfbfbf',
@@ -24,7 +25,11 @@ module.exports = {
         600: '#1790ad'
       },
       red: {
+        50: '#ffe6e7',
         500: '#e25353'
+      },
+      stone: {
+        800: '#434343'
       }
     }),
     extend: {}

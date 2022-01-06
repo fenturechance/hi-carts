@@ -1,6 +1,6 @@
 import Cookie from 'js-cookie'
 // import jwtDecode from 'jwt-decode'
-import API from '~/api.js'
+import { API } from '~/api.js'
 
 export const state = () => ({
   locales: ['zh_tw'],
@@ -90,9 +90,7 @@ export const actions = {
       commit('set_courses', {
         courses: coursesArray
       })
-    }).catch((error) => {
-      console.log(error.response, 'error')
-      console.log('TO DO error')
+    }).catch(() => {
     })
   },
   saveMemberInfo({ state }, payload) {
@@ -108,9 +106,7 @@ export const actions = {
         ..._data
       }
     }).then((response) => {
-      console.log(response.data, 'patchMemberInfo response')
-    }).catch((error) => {
-      console.log(error, 'error')
+    }).catch(() => {
     })
   },
   getUserFavorite({ state, commit }, payload) {
@@ -121,9 +117,7 @@ export const actions = {
       url: API.getMemberInfo.url.replace(':user_id.json', uid + '.json') + '?auth=' + this.$cookies.get('id_token')
     }).then((response) => {
       commit('set_userFavorite', response.data.favorite)
-      console.log(state.userFavorite, 'state.userFavorite')
-    }).catch((error) => {
-      console.log(error, 'error')
+    }).catch(() => {
     })
   },
   updateUserFavorite({ state }, payload) {
@@ -134,14 +128,11 @@ export const actions = {
         favorite: state.userFavorite
       }
     }).then((response) => {
-      console.log(response.data)
-    }).catch((error) => {
-      console.log(error)
+    }).catch(() => {
     })
   },
   async ajaxTest({ commit, getters }, payload) {
     const data = await this.$axios('/api/test')
-    console.log(data, 'data.data')
     // getters[_M.SET_CONFIG_URL]
     commit('add_test_data', {
       title: data.data

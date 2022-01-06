@@ -17,5 +17,18 @@
   },
   "header": {
     "iWantToStart": "我想開課"
+  },
+  "carts": {
+    "carts": "購物車",
+    "summary": "小計",
+    "theShoppingCartIsEmptyGoShoppingForYourFavoriteCourses": "購物車裡是空的，去逛逛喜歡的課程吧！",
+    "goToDiscoveryDirectory": "前往探索目錄",
+    "enterDiscountCode": "輸入折扣代碼",
+    "chooseVouchers": "選擇抵用券",
+    "amount": "金額",
+    "goToCheckout": "前往結賬",
+    "clickTheButtonAboveToIndicateThatYouHaveReadAndAgreedTo": "點擊上方按鈕即表示您已閱讀並同意",
+    "hiSkioPurchaseAndRefundPolicy": "「HiSKIO購買與退費政策」",
+    "confirm": "確定"
   }
 }

@@ -4,7 +4,11 @@
       @loginClick="loginClick"
       @registeredClick="registeredClick"
     />
-    <nuxt />
+    <div class="bg-gray-100 min-h-screen">
+      <div class="max-w-6xl mx-auto mt-[54px]">
+        <nuxt />
+      </div>
+    </div>
     <LoginModal
       v-if="openModal"
       :modal-typle="modalTyple"

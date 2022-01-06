@@ -50,8 +50,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.btnStyle {
-  @apply py-1.5 px-4 rounded-md text-sm tracking-wide;
-}
-</style>
