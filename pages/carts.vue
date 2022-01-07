@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
 import RightArrow from '~/assets/svg/RightArrow.vue'
 import TrashSvg from '~/assets/svg/TrashSvg.vue'
 import CoursesOtherBought from '~/components/Carts/CoursesOtherBought.vue'
@@ -141,10 +142,28 @@ export default {
       }
     }
   },
+  watch: {
+    cartItems() {
+      const string = this.cartItems.map(item => item.id).join(',')
+      Cookie.set('cartItems', string)
+    }
+  },
+  created() {
+    const cartItems = Cookie.get('cartItems')
+    if (cartItems) {
+      this.selectCartItems = cartItems.split(',').map(string => ({
+        id: parseInt(string)
+      }))
+      this.fetchCartsData()
+    }
+  },
   methods: {
     getCartsData(course) {
-      this.$store.commit('setLoading', { loading: true })
       this.selectCartItems.push(course)
+      this.fetchCartsData()
+    },
+    fetchCartsData() {
+      this.$store.commit('setLoading', { loading: true })
       return this.$axios({
         method: API.carts.create.method,
         url: API.carts.create.url,
