@@ -13,6 +13,7 @@ module.exports = {
       ...colors,
       gray: {
         50: '#f0f0f0',
+        80: '#c0c0c0',
         100: '#fafafa',
         200: '#f3f3f3',
         300: '#d9d9d9',
@@ -27,7 +28,8 @@ module.exports = {
       },
       red: {
         50: '#ffe6e7',
-        500: '#e25353'
+        500: '#e25353',
+        600: '#e34b4a'
       },
       stone: {
         800: '#434343',

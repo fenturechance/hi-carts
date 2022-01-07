@@ -56,6 +56,7 @@ import StartSvg from '~/assets/svg/StartSvg.vue'
 import UsersSvg from '~/assets/svg/UsersSvg.vue'
 import BellSvg from '~/assets/svg/BellSvg.vue'
 import CartSvg from '~/assets/svg/CartSvg.vue'
+import { setPrice } from '~/assets/js/utils.js'
 export default {
   components: {
     StartSvg,
@@ -73,7 +74,7 @@ export default {
   },
   methods: {
     setPrice(number) {
-      return new Intl.NumberFormat('en-US').format(number)
+      return setPrice(number)
     },
     fetchCourseOtherBought() {
       return this.$axios({
