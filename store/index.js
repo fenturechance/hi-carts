@@ -1,6 +1,8 @@
 import Cookie from 'js-cookie'
 // import jwtDecode from 'jwt-decode'
+import axios from 'axios'
 import { API } from '~/api.js'
+import { toUpperFirst } from '~/assets/js/utils.js'
 
 export const state = () => ({
   locales: ['zh_tw'],
@@ -28,12 +30,14 @@ export const mutations = {
     state.userPicture = payload.userPicture
     state.userName = payload.userName
     state.userUid = payload.userUid
+    axios.defaults.headers.common.Authorization = `${toUpperFirst(payload.token_type)} ${payload.refresh_token}`
     if (process.client) {
       Cookie.set('id_token', payload.id_token)
       Cookie.set('refresh_token', payload.refresh_token)
       Cookie.set('userUid', state.userUid)
       Cookie.set('userPicture', state.userPicture)
       Cookie.set('userName', state.userName)
+      Cookie.set('token_type', state.token_type)
     }
   },
   setUserlogout: (state, payload) => {
@@ -65,10 +69,12 @@ export const actions = {
       const picture = context.app.$cookies.get('userPicture')
       const name = context.app.$cookies.get('userName')
       const uid = context.app.$cookies.get('userUid')
+      const tokenType = context.app.$cookies.get('token_type')
       commit('setUserLoggedIn', {
         userPicture: picture,
         userName: name,
-        userUid: uid
+        userUid: uid,
+        token_type: tokenType
       })
     }
   },

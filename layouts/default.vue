@@ -5,9 +5,7 @@
       @registeredClick="registeredClick"
     />
     <div class="bg-gray-100 min-h-screen">
-      <div class="max-w-6xl mx-auto mt-[54px]">
-        <nuxt />
-      </div>
+      <nuxt />
     </div>
     <LoginModal
       v-if="openModal"
@@ -63,6 +61,7 @@ export default {
       this.$store.commit('setUserLoggedIn', {
         id_token: response.data.access_token,
         refresh_token: response.data.access_token,
+        token_type: response.data.token_type,
         userUid: response2.data.username,
         userName: response2.data.username,
         userPicture: response2.data.avatar

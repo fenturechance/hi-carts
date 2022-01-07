@@ -8,10 +8,12 @@ export const API = {
     me: {
       url: '/me',
       method: 'get'
-    },
-    exchangeToken: {
-      url: '/v1/token',
-      method: 'post'
+    }
+  },
+  courses: {
+    fundraising: {
+      url: '/courses/fundraising',
+      method: 'get'
     }
   }
 }
