@@ -1,18 +1,19 @@
 <template>
   <div>
     <div class="pt-[80px] flex mt-[54px] maxWidth pb-16">
-      <div class="flex-grow">
-        <h2 class="titleStyle">
+      <div class="flex-grow mr-3">
+        <h2 class="titleStyle mb-4">
           {{ $t('carts.carts') }}
         </h2>
-        <div class="text-center mt-4">
-          <img :src="imgEmptyCart" class="w-[400px] m-auto">
-          <p class="text-gray-450 mb-4 mt-3 font-light">
-            {{ $t('carts.theShoppingCartIsEmptyGoShoppingForYourFavoriteCourses') }}
-          </p>
-          <button class="bg-cyan-600 text-white py-2 hover:bg-cyan-500 min-w-[200px] rounded-md">
-            {{ $t('carts.goToDiscoveryDirectory') }}
-          </button>
+        <EmptyCarts v-if="cartItems.length === 0" />
+        <div v-else class="bg-white rounded-lg shadow-xl">
+          <header>
+            <ul class="flex border-b border-gray-400">
+              <li v-for="(col, key) in cols" :key="key" :class="col.width" class="py-4 px-2 text-gray-450 font-light">
+                {{ col.text }}
+              </li>
+            </ul>
+          </header>
         </div>
       </div>
       <div class="w-[33%]">
@@ -56,29 +57,75 @@
         </div>
       </div>
     </div>
-    <CoursesOtherBought />
+    <CoursesOtherBought @getCartsData="getCartsData" />
   </div>
 </template>
 
 <script>
-import imgEmptyCart from '~/assets/img/img-EmptyCart.png'
 import RightArrow from '~/assets/svg/RightArrow.vue'
 import CoursesOtherBought from '~/components/Carts/CoursesOtherBought.vue'
+import EmptyCarts from '~/components/Carts/EmptyCarts.vue'
+import { API, baseURL } from '~/api.js'
 export default {
   components: {
     RightArrow,
-    CoursesOtherBought
+    CoursesOtherBought,
+    EmptyCarts
   },
   data() {
     return {
-      imgEmptyCart,
       amount: 0,
-      totalAmount: 0
+      totalAmount: 0,
+      cartItems: []
     }
   },
   computed: {
     checkoutBtnBool() {
       return false
+    },
+    cols() {
+      return {
+        item: {
+          text: this.$t('carts.item'),
+          width: 'w-[60%]'
+        },
+        price: {
+          text: this.$t('carts.price'),
+          width: 'w-[10%]'
+        },
+        coupon: {
+          text: '',
+          width: 'w-[15%]'
+        },
+        totalPrice: {
+          text: this.$t('carts.totalPrice'),
+          width: 'w-[15%]'
+        }
+      }
+    }
+  },
+  methods: {
+    getCartsData(course) {
+      this.$store.commit('setLoading', { loading: true })
+      this.cartItems.push(course)
+      return this.$axios({
+        method: API.carts.create.method,
+        url: API.carts.create.url,
+        baseURL,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          items: this.cartItems.map(item => ({ id: item.id, coupon: '' })),
+          coupons: []
+        }
+      }).then((response) => {
+        this.$store.commit('setLoading', { loading: false })
+        console.log(response)
+      }).catch(() => {
+        // if (!error.response) { return }
+        // if (!error.response.data) { }
+      })
     }
   }
 }

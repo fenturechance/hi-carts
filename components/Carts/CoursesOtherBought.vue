@@ -6,11 +6,11 @@
       </h2>
       <ul class="flex gap-4">
         <li v-for="course in courseArr" :key="course.id" class="w-1/4 rounded-lg overflow-hidden bg-white shadow-xl cursor-pointer">
-          <div :style="{ backgroundImage: `url('${course.image}')` }" class="pt-[60%] bg-cover bg-center relative">
-            <div class="w-full h-1/3 absolute bottom-0 right-0 bg-gradient-to-t from-black/75 to-transparent">
+          <div :style="{ backgroundImage: `url('${course.image}')` }" class="pt-[60%] bg-cover bg-center relative hoverShowChild">
+            <div class="w-full h-1/3 absolute bottom-0 right-0 bg-gradient-to-t from-black/75 to-transparent child">
               <div class="flex px-2 py-2 justify-end h-full items-end">
                 <BellSvg class="w-[22px] h-[24px] text-yellow-200 mr-3" />
-                <CartSvg class="w-[24px] h-[24px] text-white hover:text-yellow-300" />
+                <CartSvg class="w-[24px] h-[24px] text-white hover:text-yellow-300" @click="addToCart(course)" />
               </div>
             </div>
           </div>
@@ -89,6 +89,9 @@ export default {
         // if (!error.response) { return }
         // if (!error.response.data) { }
       })
+    },
+    addToCart(course) {
+      this.$emit('getCartsData', course)
     }
   }
 }
@@ -96,4 +99,10 @@ export default {
 
 <style scoped>
 @import '~/assets/css/carts.css';
+.hoverShowChild .child {
+  display: none;
+}
+.hoverShowChild:hover .child {
+  display: inline-block;
+}
 </style>

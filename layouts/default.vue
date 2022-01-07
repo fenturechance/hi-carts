@@ -14,6 +14,11 @@
       :error-response="errorResponse"
       @loginModalSubmit="loginModalSubmit"
     />
+    <div v-if="$store.state.loading" class="bg-black/50 fixed top-0 left-0 w-screen h-screen flex items-center justify-center">
+      <p class="text-white">
+        Loading....
+      </p>
+    </div>
   </div>
 </template>
 <script>

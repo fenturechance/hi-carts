@@ -12,6 +12,7 @@ export const state = () => ({
   userName: '',
   userUid: '',
   userFavorite: null,
+  loading: false,
   courses: []
 })
 
@@ -51,15 +52,8 @@ export const mutations = {
     Cookie.remove('userName')
     $nuxt.$router.push({ name: 'index' })
   },
-  add_test_data: (state, payload) => {
-    state.test_data.title = payload.title
-    state.test_data.aaa++
-  },
-  set_courses: (state, payload) => {
-    state.courses = payload.courses
-  },
-  set_userFavorite: (state, payload) => {
-    state.userFavorite = payload || {}
+  setLoading: (state, payload) => {
+    state.loading = payload.loading
   }
 }
 

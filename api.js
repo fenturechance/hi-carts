@@ -15,5 +15,19 @@ export const API = {
       url: '/courses/fundraising',
       method: 'get'
     }
+  },
+  carts: {
+    delete: {
+      url: '/carts',
+      method: 'delete'
+    },
+    get: {
+      url: '/carts',
+      method: 'post'
+    },
+    create: {
+      url: '/carts',
+      method: 'post'
+    }
   }
 }
