@@ -1,22 +1,22 @@
 <template>
   <div>
-    <div class="pt-[80px] flex mt-[54px] maxWidth pb-16">
-      <div class="flex-grow mr-3">
+    <div class="pt-[80px] lg:flex mt-[54px] maxWidth pb-16">
+      <div class="flex-grow lg:mr-3">
         <h2 class="titleStyle mb-4">
           {{ $t('carts.carts') }}
         </h2>
         <EmptyCarts v-if="cartItems.length === 0" />
         <div v-else class="bg-white rounded-lg shadow-xl">
-          <header>
+          <header class="lg:block hidden">
             <ul class="flex border-b border-gray-300">
               <li v-for="(col, key) in cols" :key="key" :class="col.width" class="py-4 px-2 text-gray-450 font-light">
                 {{ col.text }}
               </li>
             </ul>
           </header>
-          <ul>
-            <li v-for="item in cartItems" :key="item.id">
-              <ul class="flex items-center border-b border-gray-300">
+          <ul class="">
+            <li v-for="item in cartItems" :key="item.id" class="border-b border-gray-300 ">
+              <ul class="items-center lg:flex hidden">
                 <li v-for="(col, key) in cols" :key="key" :class="col.width" class="py-4 px-2">
                   <div class="flex items-center">
                     <template v-if="key === 'name'">
@@ -36,11 +36,33 @@
                   </div>
                 </li>
               </ul>
+              <div class="lg:hidden block py-3 px-3">
+                <div class="flex justify-between">
+                  <div class="flex">
+                    <div class="w-[62px] h-[34px] rounded-md bg-cover bg-center mr-2" :style="{ backgroundImage: `url('${item.image}')` }" />
+                    <p :class="cols.name.style" class="text-sm">
+                      {{ item.name }}
+                    </p>
+                  </div>
+                  <TrashSvg class="w-[15px] h-[18px] text-gray-400 cursor-pointer" @click="deleteCartItem(item)" />
+                </div>
+                <div class="flex justify-between items-center mt-5">
+                  <p class="text-xs text-gray-450 font-light">
+                    {{ item.subtotal }}
+                  </p>
+                  <p :class="cols.coupon.style" class="text-xs">
+                    {{ item.coupon }}
+                  </p>
+                  <p class="text-gray-500 text-sm">
+                    {{ item.total }}
+                  </p>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
       </div>
-      <div class="w-[33%]">
+      <div class="lg:w-[33%] pt-6 lg:pt-0">
         <h2 class="titleStyle mb-3">
           {{ $t('carts.summary') }}
         </h2>
@@ -49,8 +71,8 @@
             {{ $t('carts.enterDiscountCode') }}
           </p>
           <div class="flex">
-            <input type="text" class="border border-gray-400 py-1 px-2 flex-grow rounded-md">
-            <button class="py-2 px-5 rounded-md bg-red-50 text-red-500 ml-2">
+            <input type="text" class="border border-gray-400 py-1 px-2 flex-grow rounded-md" style="width: calc(100% - 72px)">
+            <button class="py-2 px-5 rounded-md bg-red-50 text-red-500 ml-2 whitespace-nowrap width-[72px] lg:block hidden">
               {{ $t('carts.confirm') }}
             </button>
           </div>

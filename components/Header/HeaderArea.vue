@@ -1,17 +1,17 @@
 <template>
   <div class="bg-white py-0.5 shadow fixed top-0 w-full">
-    <nav class="max-w-6xl flex justify-between m-auto items-center">
+    <nav class="maxWidth flex justify-between items-center">
       <div class="flex">
-        <div class="navbar-brand">
+        <div>
           <nuxt-link :to="{ name: 'index' }">
             <Logo class="w-[100px] h-[50px]" />
           </nuxt-link>
         </div>
-        <div class="navbar-menu is-active">
+        <div>
           <!-- <Search /> -->
         </div>
       </div>
-      <div class="navbar-end is-hidden-mobile">
+      <div>
         <MenuArea
           @loginClick="$emit('loginClick')"
           @registeredClick="$emit('registeredClick')"
@@ -42,3 +42,6 @@ export default {
   }
 }
 </script>
+<style scoped>
+@import '~/assets/css/carts.css';
+</style>

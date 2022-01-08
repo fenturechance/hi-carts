@@ -71,7 +71,6 @@ export default {
         userName: response2.data.username,
         userPicture: response2.data.avatar
       })
-      this.$store.dispatch('getUserFavorite')
     },
     loginFun(data) {
       return this.$axios({

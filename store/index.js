@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie'
 // import jwtDecode from 'jwt-decode'
 import axios from 'axios'
-import { API } from '~/api.js'
+// import { API } from '~/api.js'
 import { toUpperFirst } from '~/assets/js/utils.js'
 
 export const state = () => ({
@@ -11,9 +11,7 @@ export const state = () => ({
   userPicture: '',
   userName: '',
   userUid: '',
-  userFavorite: null,
-  loading: false,
-  courses: []
+  loading: false
 })
 
 export const getters = () => {
@@ -71,72 +69,6 @@ export const actions = {
         token_type: tokenType
       })
     }
-  },
-  setCoursesList({ commit }, context) {
-    return this.$axios({
-      method: API.getCoursesList.method,
-      url: API.getCoursesList.url
-    }).then((response) => {
-      let coursesArray = []
-      for (const key in response.data) {
-        coursesArray.push({
-          id: key,
-          ...response.data[key]
-        })
-      }
-      coursesArray = coursesArray.sort((a, b) => {
-        return a.order > b.order ? 1 : -1
-      })
-      commit('set_courses', {
-        courses: coursesArray
-      })
-    }).catch(() => {
-    })
-  },
-  saveMemberInfo({ state }, payload) {
-    const uid = (payload && payload.userUid) || state.userUid
-    const _data = payload || {
-      name: state.userName,
-      picture: state.userPicture
-    }
-    return this.$axios({
-      method: API.patchMemberInfo.method,
-      url: API.patchMemberInfo.url.replace(':user_id.json', uid + '.json'),
-      data: {
-        ..._data
-      }
-    }).then((response) => {
-    }).catch(() => {
-    })
-  },
-  getUserFavorite({ state, commit }, payload) {
-    if (!state.isUserLoggedIn) { return }
-    const uid = state.userUid
-    return this.$axios({
-      method: API.getMemberInfo.method,
-      url: API.getMemberInfo.url.replace(':user_id.json', uid + '.json') + '?auth=' + this.$cookies.get('id_token')
-    }).then((response) => {
-      commit('set_userFavorite', response.data.favorite)
-    }).catch(() => {
-    })
-  },
-  updateUserFavorite({ state }, payload) {
-    return this.$axios({
-      method: API.patchMemberInfo.method,
-      url: API.patchMemberInfo.url.replace(':user_id.json', state.userUid + '.json') + '?auth=' + this.$cookies.get('id_token'),
-      data: {
-        favorite: state.userFavorite
-      }
-    }).then((response) => {
-    }).catch(() => {
-    })
-  },
-  async ajaxTest({ commit, getters }, payload) {
-    const data = await this.$axios('/api/test')
-    // getters[_M.SET_CONFIG_URL]
-    commit('add_test_data', {
-      title: data.data
-    })
   }
 }
 

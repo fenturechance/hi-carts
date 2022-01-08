@@ -7,3 +7,9 @@
 .btnStyle {
   @apply py-1.5 px-4 rounded-md text-sm tracking-wide;
 }
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
