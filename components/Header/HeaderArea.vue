@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white py-0.5 shadow fixed top-0 w-full">
+  <div class="bg-white py-0.5 shadow fixed top-0 w-full left-0">
     <nav class="maxWidth flex justify-between items-center">
       <div class="flex">
         <div>

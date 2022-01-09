@@ -10,7 +10,9 @@
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js",
     "lintfix": "yarn lint:js --fix",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "npx tailwind build assets/css/main.css -o assets/css/build.css && start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
@@ -32,16 +34,22 @@
     "@nuxtjs/eslint-config": "^8.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.2.1",
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/vue": "^6.4.9",
     "@vue/test-utils": "^1.3.0",
     "autoprefixer": "^10.4.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^27.4.4",
+    "babel-loader": "^8.2.3",
     "eslint": "^8.4.1",
     "eslint-plugin-nuxt": "^3.1.0",
     "eslint-plugin-vue": "^8.2.0",
     "jest": "^27.4.4",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.11",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^3.0.4",
+    "vue-loader": "^15.9.8"
   }
 }

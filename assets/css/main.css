@@ -13,3 +13,6 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+.maxWidth {
+  @apply max-w-6xl mx-auto px-5;
+}
